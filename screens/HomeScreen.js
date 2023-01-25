@@ -39,10 +39,9 @@ const HomeScreen = () => {
     return (
         <KeyboardAvoidingView style={styles.container}>
             <ScrollView>
-                <View>
-                    <TextInput placeholder='search' style={styles.input} value={search} onChangeText={(text) => {
+                <View style={styles.searchContainer}>
+                    <TextInput placeholder='Search by title' style={styles.search} value={search} onChangeText={(text) => {
                         setSearch(text)
-                        console.log(text);
                     }} />
                 </View>
                 <View style={styles.buttonContainer}>
@@ -51,7 +50,7 @@ const HomeScreen = () => {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.cardsContainer}>
-                    {filteredTodos.map((todo) => {
+                    {filteredTodos.length > 0 ? filteredTodos.map((todo) => {
                         return (
                             <View key={todo.id} style={styles.card} >
                                 <Text>
@@ -68,7 +67,7 @@ const HomeScreen = () => {
                                 </View>
                             </View>
                         )
-                    })}
+                    }) : <Text>No data available with {search}</Text>}
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>
@@ -79,7 +78,14 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
-    input: {
+    searchContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    search: {
+        marginTop: 20,
+        width: '90%',
+        backgroundColor: '#efd',
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 10,
