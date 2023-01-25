@@ -1,32 +1,38 @@
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 import React, { useState } from 'react'
-import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-
+import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 const AddTodo = () => {
-    const [form,setForm] = useState({
-        title:'',
-        description:''
+    const navigation = useNavigation()
+    const [form, setForm] = useState({
+        title: '',
+        description: ''
     });
-    const handleChange = (value) => {
-        setForm({...form,[name]:value})
-        console.log(form);
+    const handleChange = (name, value) => {
+        setForm({ ...form, [name]: value })
     }
+    const handlePress = async () => {
+        await axios.post('http://10.0.2.2:3000/todos', form)
+        navigation.navigate('Home')
+    }
+
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.formGroup}>
+            <ScrollView style={styles.formGroup}>
                 <View style={styles.inputGroup}>
                     <Text style={styles.title}>Name:</Text>
-                    <TextInput style={styles.input} onChangeText={(text)=>handleChange(text)} name='title' placeholder='Task1' />
+                    <TextInput style={styles.input} value={form.title} onChangeText={(text) => handleChange('title', text)} placeholder='Task1' />
                 </View>
                 <View style={styles.inputGroup}>
                     <Text style={styles.title}>Description:</Text>
-                    <TextInput style={styles.input} onChangeText={(text)=>handleChange(text)} name='description' placeholder='Description' />
+                    <TextInput style={styles.input} value={form.description} onChangeText={(text) => handleChange('description', text)} id='description' placeholder='Description' />
                 </View>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={handlePress}>
                         <Text style={styles.buttonText}> Create </Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </ScrollView>
 
         </SafeAreaView>
     )

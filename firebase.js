@@ -10,4 +10,4 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const CrudApp = fireS
+export { app }

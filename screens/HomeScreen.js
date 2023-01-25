@@ -1,19 +1,76 @@
 import { useNavigation } from '@react-navigation/native'
-import React from 'react'
-import { Button, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { Alert, Button, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
 const HomeScreen = () => {
     const navigation = useNavigation()
+    const [subscribed, setSubscribed] = useState(true)
+    const [search, setSearch] = useState('')
+    const [todos, setTodos] = useState([])
+    const filteredTodos = todos.filter((todo) => todo.title.toLowerCase().includes(search))
+    const getTodos = async () => {
+        axios.get('http://10.0.2.2:3000/todos').then((response) => {
+            subscribed && setTodos(response.data)
+        }).catch((error) => console.log(error))
+    }
+    const handleDelete = async (id) => {
+        Alert.alert('Delete', 'Are you sure you want to delete ? ',
+            [{
+                text: 'Cancel',
+                style: 'cancel'
+            }, {
+                text: 'OK',
+                onPress: async () => {
+                    await axios.delete('http://10.0.2.2:3000/todos/' + id)
+                    getTodos()
+                },
+                style: 'default'
+            }])
+    }
+    useEffect(() => {
+        setSubscribed(true)
+        getTodos()
+        return () => setSubscribed(false)
+    }, [search])
     const handlePress = () => {
-        navigation.navigate('Add Todo')
+        navigation.navigate('AddTodo')
     }
     return (
         <KeyboardAvoidingView style={styles.container}>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={handlePress} style={styles.button} >
-                    <Text style={styles.buttonText}>Add Todo</Text>
-                </TouchableOpacity>
-            </View>
+            <ScrollView>
+                <View>
+                    <TextInput placeholder='search' style={styles.input} value={search} onChangeText={(text) => {
+                        setSearch(text)
+                        console.log(text);
+                    }} />
+                </View>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity onPress={handlePress} style={styles.button} >
+                        <Text style={styles.buttonText}>Add Todo</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.cardsContainer}>
+                    {filteredTodos.map((todo) => {
+                        return (
+                            <View key={todo.id} style={styles.card} >
+                                <Text>
+                                    <Text style={{ fontWeight: 'bold' }}>Title: </Text>
+                                    {todo.title},
+                                    <Text style={{ fontWeight: 'bold' }}>Description: </Text>
+                                    {todo.description}
+                                </Text>
+                                <View style={{ alignItems: 'flex-end', width: '100%' }}>
+                                    <TouchableOpacity
+                                        style={{ backgroundColor: '#f74', padding: 4, borderRadius: 10 }}
+                                        onPress={() => handleDelete(todo.id)}
+                                    ><Text style={{ color: 'white' }}> Delete</Text></TouchableOpacity>
+                                </View>
+                            </View>
+                        )
+                    })}
+                </View>
+            </ScrollView>
         </KeyboardAvoidingView>
     )
 }
@@ -21,6 +78,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
     },
     buttonContainer: {
         width: '100%',
@@ -39,6 +103,19 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white'
+    },
+    cardsContainer: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    card: {
+        marginBottom: 16,
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+        borderColor: '#ccc',
+        borderRadius: 10,
+        borderWidth: 1,
+        width: '90%',
     },
 });
 

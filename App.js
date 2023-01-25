@@ -6,11 +6,33 @@ import HomeScreen from './screens/HomeScreen';
 import AddTodo from './screens/AddTodo';
 const Stack = createNativeStackNavigator();
 export default function App() {
+  console.log('App working fine , happy coding ! :D ');
   return (
-    <NavigationContainer>
+    <NavigationContainer >
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Add Todo" component={AddTodo} />
+        <Stack.Screen name="Home" options={{
+          title: 'My home',
+          headerStyle: {
+            backgroundColor: '#ac3',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          animation: 'slide_from_right',
+        }} component={HomeScreen} />
+        <Stack.Screen name="AddTodo"
+          options={{
+            title: 'Add todo',
+            headerStyle: {
+              backgroundColor: '#ac3',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+            animation: 'slide_from_right',
+          }} component={AddTodo} />
       </Stack.Navigator>
     </NavigationContainer>
   );
