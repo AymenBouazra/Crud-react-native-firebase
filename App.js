@@ -13,7 +13,7 @@ export default function App() {
         <Stack.Screen name="Home" options={{
           title: 'My home',
           headerStyle: {
-            backgroundColor: '#ac3',
+            backgroundColor: '#003865',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
@@ -25,7 +25,7 @@ export default function App() {
           options={{
             title: 'Add todo',
             headerStyle: {
-              backgroundColor: '#ac3',
+              backgroundColor: '#003865',
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
